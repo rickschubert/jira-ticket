@@ -1,0 +1,14 @@
+{
+    "JIRA_USER_ID": "Your.Jira.User.ID.Should.Go.Here",
+    "JIRA_API_KEY": "Your.API.Key.Should.Go.Here",
+    "JIRA_USER_NAME": "Your.UserName.Will.Go.Here@tray.io",
+    "JIRA_BASE_URL": "https://Your_Company_Name.atlassian.net",
+    "SHORTCUTS": [
+        {
+            "shortcut": "green",
+            "id": "10001",
+            "defaultIssueType": "10002",
+            "labels": ["Frontend"]
+        }
+    ]
+}

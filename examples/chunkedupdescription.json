@@ -1,0 +1,52 @@
+{
+    "version": 1,
+    "type": "doc",
+    "content": [
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "part1"
+                },
+                {
+                    "type": "hardBreak"
+                },
+                {
+                    "type": "text",
+                    "text": "part2"
+                },
+                {
+                    "type": "hardBreak"
+                },
+                {
+                    "type": "text",
+                    "text": "part3"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "part4"
+                },
+                {
+                    "type": "hardBreak"
+                },
+                {
+                    "type": "text",
+                    "text": "part5"
+                },
+                {
+                    "type": "hardBreak"
+                },
+                {
+                    "type": "text",
+                    "text": "part6"
+                }
+            ]
+        }
+    ]
+}

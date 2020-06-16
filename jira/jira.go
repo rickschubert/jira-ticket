@@ -128,7 +128,6 @@ func CreateNewTicket(input CreateNewticketInput) NewTicket {
 	newTicketInput.Fields.Labels = input.Labels
 
 	inputJson, errMarshalling := json.MarshalIndent(newTicketInput, "", "    ")
-	fmt.Println(string(inputJson))
 	utils.HandleErrorStrictly(errMarshalling)
 
 	resp, err := requestClient.R().

@@ -32,9 +32,19 @@ type reporter struct {
 	Id string `json:"id"`
 }
 
+type Attr struct {
+	Href string `json:"href"`
+}
+
+type mark struct {
+	Type  string `json:"type"`
+	Attrs Attr   `json:"attrs"`
+}
+
 type paragraphContent struct {
-	Text string `json:"text,omitempty"`
-	Type string `json:"type"`
+	Text  string `json:"text,omitempty"`
+	Type  string `json:"type"`
+	Marks []mark `json:"marks,omitempty"`
 }
 
 type content struct {
@@ -103,8 +113,27 @@ func splitPlainTextDescriptionIntoJiraApiObjects(plainTextDescription string) []
 	}
 }
 
+func linkifyContentBlock(content content) content {
+	var newParagraphContents []paragraphContent
+	for _, paragraph := range content.Content {
+		if len(linksInParagraph) > 0 {
+
+		} else {
+			newParagraphContents = append(newParagraphContents, paragraph)
+		}
+	}
+}
+
+func linkifyJiraApiDescriptionObjects(contents []content) []content {
+	for i, content := range contents {
+		contents[i] = linkifyContentBlock(content)
+	}
+	return contents
+}
+
 func convertDescription(plainTextDescription string) ticketDescription {
 	splitUpParagraphs := splitPlainTextDescriptionIntoJiraApiObjects(plainTextDescription)
+	splitUpParagraphs = linkifyJiraApiDescriptionObjects(splitUpParagraphs)
 	return ticketDescription{
 		Type:    "doc",
 		Version: 1,

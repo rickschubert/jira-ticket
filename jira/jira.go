@@ -117,10 +117,10 @@ func linkifyContentBlock(cont content) content {
 	var newParagraphContents []paragraphContent
 	for _, paragraph := range cont.Content {
 		linksInParagraph := utils.SplitTextOnLinks(paragraph.Text)
-		// if len(linksInParagraph) > 0 {
 		for _, text := range linksInParagraph {
+			var paraContent paragraphContent
 			if text.IsLink {
-				newParagraphContents = append(newParagraphContents, paragraphContent{
+				paraContent = paragraphContent{
 					Type: "text",
 					Text: text.Text,
 					Marks: []mark{
@@ -131,16 +131,15 @@ func linkifyContentBlock(cont content) content {
 							},
 						},
 					},
-				})
+				}
 			} else {
-				newParagraphContents = append(newParagraphContents, paragraphContent{
+				paraContent = paragraphContent{
 					Type: "text",
 					Text: text.Text,
-				})
+				}
 			}
+			newParagraphContents = append(newParagraphContents, paraContent)
 		}
-		// } else {
-		// }
 	}
 	return content{
 		Type:    "paragraph",

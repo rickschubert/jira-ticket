@@ -17,27 +17,34 @@ func generatePlaceHolder(index int) string {
 	return fmt.Sprintf("%s%d%s", placeholderMarker, index, placeholderMarker)
 }
 
-func SplitTextOnLinks(text string) []textChunk {
-	var linksInText []string
-	var textWithPlaceHolders string
+func matchContainsActualText(match string) bool {
+	return strings.Trim(match, " ") != ""
+}
 
+func extractAllLinksFromTextAndReplaceThemWithPlaceholders(text string) (linksInText []string, textWithPlaceHolders string) {
+	var links []string
 	textWithPlaceHolders = text
+
 	linkRegex := regexp.MustCompile(`http(?:s)?://.+?(\s|$)`)
 	results := linkRegex.FindAllStringSubmatch(text, -1)
 	for i, result := range results {
 		for _, match := range result {
-			if strings.Trim(match, " ") != "" {
+			if matchContainsActualText(match) {
 				linkOnly := strings.TrimRight(match, " ")
-				linksInText = append(linksInText, linkOnly)
+				links = append(links, linkOnly)
 				textWithPlaceHolders = strings.Replace(textWithPlaceHolders, linkOnly, generatePlaceHolder(i), 1)
 			}
 		}
 	}
 
-	var chunkedUpText []string
-	chunkedUpText = []string{textWithPlaceHolders}
+	return links, textWithPlaceHolders
+}
 
-	for i := 0; i < len(linksInText); i++ {
+func splitStringOnMarkers(text string, markers []string) []string {
+	var chunkedUpText []string
+	chunkedUpText = []string{text}
+
+	for i := 0; i < len(markers); i++ {
 		placeholder := generatePlaceHolder(i)
 		lastChunk := chunkedUpText[len(chunkedUpText)-1]
 		splits := strings.Split(lastChunk, placeholder)
@@ -46,10 +53,14 @@ func SplitTextOnLinks(text string) []textChunk {
 		chunkedUpText = append(chunkedUpText, splits[1])
 	}
 
+	return chunkedUpText
+}
+
+func convertListOfStringsIntoTextChunksShowingIfLinkOrNot(textChunks []string, linksInText []string) []textChunk {
 	var chunkObjects []textChunk
 	var amountOfLinks int
 
-	for _, chunk := range chunkedUpText {
+	for _, chunk := range textChunks {
 		if chunk != "" {
 			isPlaceholder, _ := regexp.Match(placeholderMarker, []byte(chunk))
 			if isPlaceholder {
@@ -68,4 +79,10 @@ func SplitTextOnLinks(text string) []textChunk {
 	}
 
 	return chunkObjects
+}
+
+func SplitTextOnLinks(text string) []textChunk {
+	links, textWithPlaceHolders := extractAllLinksFromTextAndReplaceThemWithPlaceholders(text)
+	chunkedUpText := splitStringOnMarkers(textWithPlaceHolders, links)
+	return convertListOfStringsIntoTextChunksShowingIfLinkOrNot(chunkedUpText, links)
 }

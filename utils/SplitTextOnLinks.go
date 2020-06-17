@@ -7,7 +7,7 @@ import (
 )
 
 type textChunk struct {
-	isLink bool
+	IsLink bool
 	Text   string
 }
 
@@ -54,13 +54,13 @@ func SplitTextOnLinks(text string) []textChunk {
 			isPlaceholder, _ := regexp.Match(placeholderMarker, []byte(chunk))
 			if isPlaceholder {
 				chunkObjects = append(chunkObjects, textChunk{
-					isLink: true,
+					IsLink: true,
 					Text:   linksInText[amountOfLinks],
 				})
 				amountOfLinks++
 			} else {
 				chunkObjects = append(chunkObjects, textChunk{
-					isLink: false,
+					IsLink: false,
 					Text:   chunk,
 				})
 			}

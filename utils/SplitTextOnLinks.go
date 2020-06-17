@@ -17,10 +17,6 @@ func generatePlaceHolder(index int) string {
 	return fmt.Sprintf("%s%d%s", placeholderMarker, index, placeholderMarker)
 }
 
-func matchContainsActualText(match string) bool {
-	return strings.Trim(match, " ") != ""
-}
-
 func extractLinksFromTextAndReplaceWithPlaceholders(text string) (textWithPlaceHolders string, linksInText []string) {
 	var links []string
 	textWithPlaceHolders = text
@@ -29,10 +25,10 @@ func extractLinksFromTextAndReplaceWithPlaceholders(text string) (textWithPlaceH
 	results := linkRegex.FindAllStringSubmatch(text, -1)
 	for i, result := range results {
 		for _, match := range result {
-			if matchContainsActualText(match) {
-				linkOnly := strings.TrimRight(match, " ")
-				links = append(links, linkOnly)
-				textWithPlaceHolders = strings.Replace(textWithPlaceHolders, linkOnly, generatePlaceHolder(i), 1)
+			link := strings.Trim(match, " ")
+			if link != "" {
+				links = append(links, link)
+				textWithPlaceHolders = strings.Replace(textWithPlaceHolders, link, generatePlaceHolder(i), 1)
 			}
 		}
 	}

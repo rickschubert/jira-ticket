@@ -21,7 +21,7 @@ func matchContainsActualText(match string) bool {
 	return strings.Trim(match, " ") != ""
 }
 
-func extractAllLinksFromTextAndReplaceThemWithPlaceholders(text string) (linksInText []string, textWithPlaceHolders string) {
+func extractLinksFromTextAndReplaceWithPlaceholders(text string) (textWithPlaceHolders string, linksInText []string) {
 	var links []string
 	textWithPlaceHolders = text
 
@@ -37,12 +37,11 @@ func extractAllLinksFromTextAndReplaceThemWithPlaceholders(text string) (linksIn
 		}
 	}
 
-	return links, textWithPlaceHolders
+	return textWithPlaceHolders, links
 }
 
 func splitStringOnMarkers(text string, markers []string) []string {
-	var chunkedUpText []string
-	chunkedUpText = []string{text}
+	chunkedUpText := []string{text}
 
 	for i := 0; i < len(markers); i++ {
 		placeholder := generatePlaceHolder(i)
@@ -63,18 +62,20 @@ func convertListOfStringsIntoTextChunksShowingIfLinkOrNot(textChunks []string, l
 	for _, chunk := range textChunks {
 		if chunk != "" {
 			isPlaceholder, _ := regexp.Match(placeholderMarker, []byte(chunk))
+			var currentTextChunk textChunk
 			if isPlaceholder {
-				chunkObjects = append(chunkObjects, textChunk{
+				currentTextChunk = textChunk{
 					IsLink: true,
 					Text:   linksInText[amountOfLinks],
-				})
+				}
 				amountOfLinks++
 			} else {
-				chunkObjects = append(chunkObjects, textChunk{
+				currentTextChunk = textChunk{
 					IsLink: false,
 					Text:   chunk,
-				})
+				}
 			}
+			chunkObjects = append(chunkObjects, currentTextChunk)
 		}
 	}
 
@@ -82,7 +83,7 @@ func convertListOfStringsIntoTextChunksShowingIfLinkOrNot(textChunks []string, l
 }
 
 func SplitTextOnLinks(text string) []textChunk {
-	links, textWithPlaceHolders := extractAllLinksFromTextAndReplaceThemWithPlaceholders(text)
+	textWithPlaceHolders, links := extractLinksFromTextAndReplaceWithPlaceholders(text)
 	chunkedUpText := splitStringOnMarkers(textWithPlaceHolders, links)
 	return convertListOfStringsIntoTextChunksShowingIfLinkOrNot(chunkedUpText, links)
 }

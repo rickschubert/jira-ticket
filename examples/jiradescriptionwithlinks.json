@@ -1,0 +1,31 @@
+{
+    "version": 1,
+    "type": "doc",
+    "content": [
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "See failure on Jenkins "
+                },
+                {
+                    "type": "text",
+                    "text": "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+                    "marks": [
+                        {
+                            "type": "link",
+                            "attrs": {
+                                "href": "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "hardBreak"
+                }
+            ]
+        }
+    ]
+}
+

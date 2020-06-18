@@ -49,7 +49,7 @@ type paragraphContent struct {
 
 type content struct {
 	Type    string             `json:"type"`
-	Content []paragraphContent `json:"content"`
+	Content []paragraphContent `json:"content,omitempty"`
 }
 
 type ticketDescription struct {
@@ -191,7 +191,7 @@ func CreateNewTicket(input CreateNewticketInput) NewTicket {
 	utils.HandleErrorStrictly(err)
 
 	if resp.StatusCode() != 201 {
-		panic(fmt.Sprintf("We were expecting status code 201 but instead received %v. The response says:\n\n%v", resp.StatusCode(), resp))
+		panic(fmt.Sprintf("We were expecting status code 201 but instead received %v when creating the ticket. The response says:\n\n%v", resp.StatusCode(), resp))
 	}
 
 	var ticket NewTicket

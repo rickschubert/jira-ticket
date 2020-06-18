@@ -11,8 +11,7 @@ Head to the [releases page](https://github.com/rickschubert/jira-ticket/releases
 ## Setup
 - Copy the file [.jiraticketcreator](https://github.com/rickschubert/jira-ticket/blob/master/.jiraticketcreator) into your home directory (`~`). Fill in your Jira user name, user ID, API Key and base URL. You can find out [how to create an API Key here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html). You can see your user ID if you set yourself as a reporter of an issue in Jira and then inspect the network request that has been made.
 
-# How to run it
-
+# Creating a new ticket
 * Option A: Run `./jira-ticket [shortcut]` to parse a complete Jira ticket *from your clipboard*, which assumes the following format:
 
 ```
@@ -34,6 +33,10 @@ What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.
     "labels": ["Frontend"]
 }
 ```
+
+## Flags
+- `--self-assign` or `--self`: assigns the created Jira ticket to yourself
+- `--sdet-bot`: Create a tray known issue notification for that new Jira ticket
 
 # Development
 - `go get` gets all dependencies, using go modules

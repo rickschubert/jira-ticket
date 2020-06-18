@@ -37,6 +37,7 @@ func (suite *testSuite) TestArgsRegularInvokingAndAttachingClipboardContentToDes
 		parseFromClipboard:             false,
 		ticketTitle:                    "this will be the title",
 		createKnownSDETBugNotification: false,
+		selfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "this will be the title"}
 
@@ -56,6 +57,7 @@ func (suite *testSuite) TestArgsRegularInvoking() {
 		parseFromClipboard:             false,
 		ticketTitle:                    "this will be the title",
 		createKnownSDETBugNotification: false,
+		selfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "this will be the title"}
 
@@ -75,8 +77,45 @@ func (suite *testSuite) TestArgsShouldCreateKnownSDETNotification() {
 		parseFromClipboard:             true,
 		ticketTitle:                    "",
 		createKnownSDETBugNotification: true,
+		selfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot"}
+	actual := validateCommandLineArguments()
+	assert.Equal(suite.T(), expected, actual)
+}
+
+func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssign() {
+	expected := cliArgs{
+		project: constants.Project{
+			Shortcut:  "embedded",
+			Id:        "10059",
+			IssueType: "10004",
+			Labels:    []string(nil),
+		},
+		parseFromClipboard:             true,
+		ticketTitle:                    "",
+		createKnownSDETBugNotification: true,
+		selfAssign:                     true,
+	}
+	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot", "--self"}
+	actual := validateCommandLineArguments()
+	assert.Equal(suite.T(), expected, actual)
+}
+
+func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssignLong() {
+	expected := cliArgs{
+		project: constants.Project{
+			Shortcut:  "embedded",
+			Id:        "10059",
+			IssueType: "10004",
+			Labels:    []string(nil),
+		},
+		parseFromClipboard:             true,
+		ticketTitle:                    "",
+		createKnownSDETBugNotification: true,
+		selfAssign:                     true,
+	}
+	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot", "--self-assign"}
 	actual := validateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
@@ -92,6 +131,7 @@ func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboard() {
 		parseFromClipboard:             true,
 		ticketTitle:                    "",
 		createKnownSDETBugNotification: false,
+		selfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded"}
 	actual := validateCommandLineArguments()
@@ -109,6 +149,7 @@ func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboardAndCreateKnown
 		parseFromClipboard:             true,
 		ticketTitle:                    "",
 		createKnownSDETBugNotification: true,
+		selfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot"}
 	actual := validateCommandLineArguments()
@@ -126,6 +167,7 @@ func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboardAndCreateKnown
 		parseFromClipboard:             true,
 		ticketTitle:                    "",
 		createKnownSDETBugNotification: true,
+		selfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot"}
 	actual := validateCommandLineArguments()
@@ -143,6 +185,7 @@ func (suite *testSuite) TestTicketTitleAndDescriptionRetrievalWithoutTakingClipb
 			Labels:    []string(nil),
 		},
 		createKnownSDETBugNotification: false,
+		selfAssign:                     false,
 	}
 	clipboardContent := ""
 	title, description := getTicketTitleAndDescription(cliArgumentsRetrieved, clipboardContent)
@@ -161,6 +204,7 @@ func (suite *testSuite) TestParsingTicketTitleAndDescriptionFromClipboard() {
 			Labels:    []string(nil),
 		},
 		createKnownSDETBugNotification: false,
+		selfAssign:                     false,
 	}
 	clipboardContent := "This will be the title\n\nThis will be the description"
 	title, description := getTicketTitleAndDescription(cliArgumentsRetrieved, clipboardContent)

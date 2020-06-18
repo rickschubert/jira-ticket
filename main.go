@@ -29,7 +29,7 @@ type knownIssuesWorkflowInputSchema struct {
 }
 
 func openLinkInBrowser(link string) {
-	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open it for you in the browser. (Probably doesn't work on Windows.)", link))
+	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open the new ticket for you in the browser. (Probably doesn't work on Windows.)", link))
 	cmd := exec.Command("open", link)
 	cmd.Run()
 }
@@ -40,6 +40,7 @@ type cliArgs struct {
 	ticketDescription              string
 	parseFromClipboard             bool
 	createKnownSDETBugNotification bool
+	selfAssign                     bool
 }
 
 func shouldUseClipboardContentAsDescription(args []string) bool {
@@ -102,6 +103,12 @@ func getTicketDescription(args []string) string {
 	}
 }
 
+func shouldSelfAssignTicket(args []string) bool {
+	_, foundShort := utils.Find(args, "--self")
+	_, foundLong := utils.Find(args, "--self-assign")
+	return foundShort || foundLong
+}
+
 func validateCommandLineArguments() cliArgs {
 	var cliArgumentsPassed = cliArgs{}
 
@@ -115,6 +122,7 @@ func validateCommandLineArguments() cliArgs {
 	cliArgumentsPassed.ticketDescription = getTicketDescription(args)
 	cliArgumentsPassed.parseFromClipboard = shouldUseClipboardContentAsDescription(args)
 	cliArgumentsPassed.createKnownSDETBugNotification = shouldCreateKnownSDETBugNotification(args)
+	cliArgumentsPassed.selfAssign = shouldSelfAssignTicket(args)
 	return cliArgumentsPassed
 }
 
@@ -205,28 +213,36 @@ func createKnownSdetBugNotification(bugInfo knownIssuesWorkflowInputSchema) {
 	color.Green("We have sent off a new SDET notification for this, thanks!")
 }
 
-func main() {
-	cliArgsPassed := validateCommandLineArguments()
-	clipboardContent := getClipboardContent()
-
+func getNewTicketInput(cliArgsPassed cliArgs, clipboardContent string) jira.CreateNewticketInput {
 	var newTicketInfo jira.CreateNewticketInput
 	newTicketInfo.Labels = cliArgsPassed.project.Labels
 	newTicketInfo.ProjectId = cliArgsPassed.project.Id
 	newTicketInfo.IssueType = cliArgsPassed.project.IssueType
 
-	if cliArgsPassed.parseFromClipboard {
-		showClipboardAndAskIfOkay(clipboardContent)
-	}
-
 	title, description := getTicketTitleAndDescription(cliArgsPassed, clipboardContent)
 	newTicketInfo.Title = title
 	newTicketInfo.Description = description
 
-	ticketInfo := jira.CreateNewTicket(newTicketInfo)
+	return newTicketInfo
+}
+
+func main() {
+	cliArgsPassed := validateCommandLineArguments()
+	clipboardContent := getClipboardContent()
+	if cliArgsPassed.parseFromClipboard {
+		showClipboardAndAskIfOkay(clipboardContent)
+	}
+
+	newTicketInput := getNewTicketInput(cliArgsPassed, clipboardContent)
+	ticketInfo := jira.CreateNewTicket(newTicketInput)
+	if cliArgsPassed.selfAssign {
+		jira.SelfAssignTicket(ticketInfo)
+	}
+
 	openLinkInBrowser(ticketInfo.Link)
 
 	if cliArgsPassed.createKnownSDETBugNotification {
-		bugInfo := collectInformationToCreateKnownSdetBugNotification(ticketInfo.Key, newTicketInfo.Title, newTicketInfo.Description)
+		bugInfo := collectInformationToCreateKnownSdetBugNotification(ticketInfo.Key, newTicketInput.Title, newTicketInput.Description)
 		createKnownSdetBugNotification(bugInfo)
 	}
 }

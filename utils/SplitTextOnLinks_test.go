@@ -36,3 +36,25 @@ func TestSplitTextOnLinks(t *testing.T) {
 	}
 	assert.Equal(t, SplitTextOnLinks(input), expectedOutput)
 }
+
+func TestSplitTextOnLinksLinkOnly(t *testing.T) {
+	input := "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/"
+	expectedOutput := []textChunk{
+		{
+			IsLink: true,
+			Text:   "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+		},
+	}
+	assert.Equal(t, SplitTextOnLinks(input), expectedOutput)
+}
+
+func TestSplitTextOnLinksTextOnly(t *testing.T) {
+	input := "See failure on Jenkins"
+	expectedOutput := []textChunk{
+		{
+			IsLink: false,
+			Text:   "See failure on Jenkins",
+		},
+	}
+	assert.Equal(t, SplitTextOnLinks(input), expectedOutput)
+}

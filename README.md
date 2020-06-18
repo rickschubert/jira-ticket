@@ -6,7 +6,7 @@ Create Jira tickets straight from the command line.
 ![](demo.gif "demo")
 
 ## Installation
-Head to the [releases page](https://github.com/rickschubert/jira-ticket/releases) and download the binary. You probably still have to make it executable using `chmod +x`, i.e. `chmod +x jira-ticket_v1.2.3`.
+Head to the [releases page](https://github.com/rickschubert/jira-ticket/releases/latest) and download the binary. You probably still have to make it executable using `chmod +x`, i.e. `chmod +x jira-ticket_v1.2.3`.
 
 ## Setup
 - Copy the file [.jiraticketcreator](https://github.com/rickschubert/jira-ticket/blob/master/.jiraticketcreator) into your home directory (`~`). Fill in your Jira user name, user ID, API Key and base URL. You can find out [how to create an API Key here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html). You can see your user ID if you set yourself as a reporter of an issue in Jira and then inspect the network request that has been made.

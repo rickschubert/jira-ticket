@@ -3,7 +3,7 @@ Jira Ticket Creator
 
 Create Jira tickets straight from the command line.
 
-![](https://im3.ezgif.com/tmp/ezgif-3-e1808eb56219.gif "demo")
+![](demo.gif "demo")
 
 ## Installation
 Head to the [releases page](https://github.com/rickschubert/jira-ticket/releases) and download the binary. You probably still have to make it executable using `chmod +x`, i.e. `chmod +x jira-ticket_v1.2.3`.

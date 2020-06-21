@@ -35,7 +35,7 @@ What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.
 ```
 
 ## Flags
-- `--self-assign` or `--self`: assigns the created Jira ticket to yourself
+- `--self-assign`, `--self` or `-s`: assigns the created Jira ticket to yourself
 - `--sdet-bot`: Create a tray known issue notification for that new Jira ticket
 
 # Development

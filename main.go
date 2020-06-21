@@ -73,7 +73,10 @@ func getProject(desiredProject string) constants.Project {
 }
 
 func isArgumentANonPositionalOptionalArgument(arg string) bool {
-	if len(arg) > 2 {
+	if len(arg) == 2 {
+		firstCharacterOfArgument := arg[0:1]
+		return firstCharacterOfArgument == "-"
+	} else if len(arg) > 2 {
 		firstTwoCharactersOfArgument := arg[0:2]
 		return firstTwoCharactersOfArgument == "--"
 	} else {
@@ -104,9 +107,10 @@ func getTicketDescription(args []string) string {
 }
 
 func shouldSelfAssignTicket(args []string) bool {
-	_, foundShort := utils.Find(args, "--self")
+	_, foundShortform := utils.Find(args, "--self")
 	_, foundLong := utils.Find(args, "--self-assign")
-	return foundShort || foundLong
+	_, foundShort := utils.Find(args, "-s")
+	return foundShortform || foundLong || foundShort
 }
 
 func validateCommandLineArguments() cliArgs {

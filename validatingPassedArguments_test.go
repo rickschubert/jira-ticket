@@ -120,6 +120,24 @@ func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssignLo
 	assert.Equal(suite.T(), expected, actual)
 }
 
+func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssignShort() {
+	expected := cliArgs{
+		project: constants.Project{
+			Shortcut:  "embedded",
+			Id:        "10059",
+			IssueType: "10004",
+			Labels:    []string(nil),
+		},
+		parseFromClipboard:             true,
+		ticketTitle:                    "",
+		createKnownSDETBugNotification: true,
+		selfAssign:                     true,
+	}
+	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot", "-s"}
+	actual := validateCommandLineArguments()
+	assert.Equal(suite.T(), expected, actual)
+}
+
 func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboard() {
 	expected := cliArgs{
 		project: constants.Project{

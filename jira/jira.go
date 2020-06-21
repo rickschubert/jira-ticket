@@ -113,35 +113,48 @@ func splitPlainTextDescriptionIntoJiraApiObjects(plainTextDescription string) []
 	}
 }
 
+func makeParagraphLinksClickable(paragraph paragraphContent) []paragraphContent {
+	var newParagraphContents []paragraphContent
+	linksInParagraph := utils.SplitTextOnLinks(paragraph.Text)
+	for _, text := range linksInParagraph {
+		var paraContent paragraphContent
+		if text.IsLink {
+			paraContent = paragraphContent{
+				Type: "text",
+				Text: text.Text,
+				Marks: []mark{
+					{
+						Type: "link",
+						Attrs: Attr{
+							Href: text.Text,
+						},
+					},
+				},
+			}
+		} else {
+			paraContent = paragraphContent{
+				Type: "text",
+				Text: text.Text,
+			}
+		}
+		newParagraphContents = append(newParagraphContents, paraContent)
+	}
+	return newParagraphContents
+}
+
+func isParagraphHardBreak(paragraph paragraphContent) bool {
+	return paragraph.Type == "hardBreak"
+}
+
 func linkifyContentBlock(cont content) content {
 	var newParagraphContents []paragraphContent
-	for _, paragraph := range cont.Content {
-		if paragraph.Type == "hardBreak" {
-			newParagraphContents = append(newParagraphContents, paragraph)
+	for _, plainParagraph := range cont.Content {
+		if isParagraphHardBreak(plainParagraph) {
+			newParagraphContents = append(newParagraphContents, plainParagraph)
 		} else {
-			linksInParagraph := utils.SplitTextOnLinks(paragraph.Text)
-			for _, text := range linksInParagraph {
-				var paraContent paragraphContent
-				if text.IsLink {
-					paraContent = paragraphContent{
-						Type: "text",
-						Text: text.Text,
-						Marks: []mark{
-							{
-								Type: "link",
-								Attrs: Attr{
-									Href: text.Text,
-								},
-							},
-						},
-					}
-				} else {
-					paraContent = paragraphContent{
-						Type: "text",
-						Text: text.Text,
-					}
-				}
-				newParagraphContents = append(newParagraphContents, paraContent)
+			paragraphWithClickableLinks := makeParagraphLinksClickable(plainParagraph)
+			for _, paragraph := range paragraphWithClickableLinks {
+				newParagraphContents = append(newParagraphContents, paragraph)
 			}
 		}
 	}

@@ -116,29 +116,33 @@ func splitPlainTextDescriptionIntoJiraApiObjects(plainTextDescription string) []
 func linkifyContentBlock(cont content) content {
 	var newParagraphContents []paragraphContent
 	for _, paragraph := range cont.Content {
-		linksInParagraph := utils.SplitTextOnLinks(paragraph.Text)
-		for _, text := range linksInParagraph {
-			var paraContent paragraphContent
-			if text.IsLink {
-				paraContent = paragraphContent{
-					Type: "text",
-					Text: text.Text,
-					Marks: []mark{
-						{
-							Type: "link",
-							Attrs: Attr{
-								Href: text.Text,
+		if paragraph.Type == "hardBreak" {
+			newParagraphContents = append(newParagraphContents, paragraph)
+		} else {
+			linksInParagraph := utils.SplitTextOnLinks(paragraph.Text)
+			for _, text := range linksInParagraph {
+				var paraContent paragraphContent
+				if text.IsLink {
+					paraContent = paragraphContent{
+						Type: "text",
+						Text: text.Text,
+						Marks: []mark{
+							{
+								Type: "link",
+								Attrs: Attr{
+									Href: text.Text,
+								},
 							},
 						},
-					},
+					}
+				} else {
+					paraContent = paragraphContent{
+						Type: "text",
+						Text: text.Text,
+					}
 				}
-			} else {
-				paraContent = paragraphContent{
-					Type: "text",
-					Text: text.Text,
-				}
+				newParagraphContents = append(newParagraphContents, paraContent)
 			}
-			newParagraphContents = append(newParagraphContents, paraContent)
 		}
 	}
 	return content{

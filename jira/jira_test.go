@@ -63,6 +63,14 @@ func TestLinkifyJiraDescriptionObjectsMultipleParagraphs(t *testing.T) {
 			Type: "paragraph",
 			Content: []paragraphContent{
 				{
+					Type: "hardBreak",
+				},
+			},
+		},
+		{
+			Type: "paragraph",
+			Content: []paragraphContent{
+				{
 					Type: "text",
 					Text: "See failure on Jenkins: https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
 				},
@@ -92,6 +100,14 @@ func TestLinkifyJiraDescriptionObjectsMultipleParagraphs(t *testing.T) {
 				{
 					Type: "text",
 					Text: " and there you go",
+				},
+			},
+		},
+		{
+			Type: "paragraph",
+			Content: []paragraphContent{
+				{
+					Type: "hardBreak",
 				},
 			},
 		},

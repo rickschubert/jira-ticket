@@ -68,7 +68,7 @@ type fields struct {
 	IssueType   issuetype         `json:"issuetype"`
 	Project     project           `json:"project"`
 	Reporter    reporter          `json:"reporter"`
-	Assignee    assignee          `json:"assignee"`
+	Assignee    *assignee         `json:"assignee,omitempty"`
 	Description ticketDescription `json:"description"`
 	Labels      []string          `json:"labels,omitempty"`
 }
@@ -198,10 +198,12 @@ func CreateNewTicket(input CreateNewticketInput) NewTicket {
 			IssueType:   issuetype{Id: input.IssueType},
 			Project:     project{Id: input.ProjectId},
 			Description: descriptionChunks,
-			Assignee:    assignee{Id: input.AssigneeUserId},
 		},
 	}
 	newTicketInput.Fields.Labels = input.Labels
+	if input.AssigneeUserId != "" {
+		newTicketInput.Fields.Assignee = &assignee{Id: input.AssigneeUserId}
+	}
 
 	inputJson, errMarshalling := json.MarshalIndent(newTicketInput, "", "    ")
 	utils.HandleErrorStrictly(errMarshalling)

@@ -8,10 +8,11 @@ import (
 )
 
 func TestGetProjectSuccess(t *testing.T) {
-	assert.Equal(t, getProject("embedded"), constants.Project{
-		Shortcut:  "embedded",
-		Id:        "10059",
+	assert.Equal(t, getProject("builder"), constants.Project{
+		Shortcut:  "builder",
+		Id:        "10131",
 		IssueType: "10004",
-		Labels:    []string(nil),
+		Labels:    []string{"Frontend"},
+		Assignee:  "5d19daa472f6850cd226fe1d",
 	})
 }

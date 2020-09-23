@@ -222,6 +222,7 @@ func getNewTicketInput(cliArgsPassed cliArgs, clipboardContent string) jira.Crea
 	newTicketInfo.Labels = cliArgsPassed.project.Labels
 	newTicketInfo.ProjectId = cliArgsPassed.project.Id
 	newTicketInfo.IssueType = cliArgsPassed.project.IssueType
+	newTicketInfo.AssigneeUserId = cliArgsPassed.project.Assignee
 
 	title, description := getTicketTitleAndDescription(cliArgsPassed, clipboardContent)
 	newTicketInfo.Title = title

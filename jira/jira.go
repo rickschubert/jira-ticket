@@ -11,11 +11,12 @@ import (
 )
 
 type CreateNewticketInput struct {
-	Title       string
-	Description string
-	ProjectId   string
-	IssueType   string
-	Labels      []string
+	Title          string
+	Description    string
+	ProjectId      string
+	IssueType      string
+	Labels         []string
+	AssigneeUserId string
 }
 
 type update struct{}
@@ -29,6 +30,10 @@ type project struct {
 }
 
 type reporter struct {
+	Id string `json:"id"`
+}
+
+type assignee struct {
 	Id string `json:"id"`
 }
 
@@ -63,6 +68,7 @@ type fields struct {
 	IssueType   issuetype         `json:"issuetype"`
 	Project     project           `json:"project"`
 	Reporter    reporter          `json:"reporter"`
+	Assignee    assignee          `json:"assignee"`
 	Description ticketDescription `json:"description"`
 	Labels      []string          `json:"labels,omitempty"`
 }
@@ -192,6 +198,7 @@ func CreateNewTicket(input CreateNewticketInput) NewTicket {
 			IssueType:   issuetype{Id: input.IssueType},
 			Project:     project{Id: input.ProjectId},
 			Description: descriptionChunks,
+			Assignee:    assignee{Id: input.AssigneeUserId},
 		},
 	}
 	newTicketInput.Fields.Labels = input.Labels

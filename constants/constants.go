@@ -16,6 +16,7 @@ type Project struct {
 	Id        string   `json:"id"`
 	IssueType string   `json:"defaultIssueType"`
 	Labels    []string `json:"labels"`
+	Assignee  string   `json:"assignee"`
 }
 
 type Settings struct {

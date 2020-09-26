@@ -239,10 +239,10 @@ func main() {
 	}
 
 	newTicketInput := getNewTicketInput(cliArgsPassed, clipboardContent)
-	ticketInfo := jira.CreateNewTicket(newTicketInput)
 	if cliArgsPassed.selfAssign {
-		jira.SelfAssignTicket(ticketInfo)
+		newTicketInput.AssigneeUserId = constants.GetSettings().UserId
 	}
+	ticketInfo := jira.CreateNewTicket(newTicketInput)
 
 	openLinkInBrowser(ticketInfo.Link)
 

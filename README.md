@@ -23,14 +23,19 @@ Everything after first line becomes description of the ticket
 
 * Option B: Run `./jira-ticket [shortcut] "[title of your ticket]" "[description of your ticket]"` (Ticket description is optional)
 
-What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.jiraticketcreator` file. The example below means that `./jira-ticket green` would create an issue of type "10002" against the Jira board "10001". Additionally, the newly created ticket would carry the label "Frontend". Since the configuration is just JSON, you can create shortcuts however you like! (For a list of tray specific configurations, please ping me privately.)
+What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.jiraticketcreator` file. The example below means that `./jira-ticket green` would create an issue of type "98002" against the Jira board "10001". Additionally, the newly created ticket would carry the label "Frontend" and be automatically assigned to the person with user id "5b9f82a2f226b393480f271a". Since the configuration is just JSON, you can create shortcuts however you like! (For a list of tray specific configurations, please ping me privately.)
+
+Required fields: `shortcut`, `id`, `defaultIssueType`
+
+Optional fields: `labels`, `assignee`
 
 ```json
 {
     "shortcut": "green",
     "id": "10001",
-    "defaultIssueType": "10002",
-    "labels": ["Frontend"]
+    "defaultIssueType": "98002",
+    "labels": ["Frontend"],
+    "assignee": "5b9f82a2f226b393480f271a"
 }
 ```
 

@@ -207,7 +207,7 @@ func createKnownSdetBugNotification(bugInfo knownIssuesWorkflowInputSchema) {
 		SetHeader("Content-Type", "application/json").
 		SetHeader("Accept", "application/json").
 		SetBody(string(inputJson)).
-		Post(settings.KnownIssueWorklfowUrl)
+		Post(settings.KnownIssueWorkflowUrl)
 	utils.HandleErrorStrictly(err)
 
 	if resp.StatusCode() != 200 {

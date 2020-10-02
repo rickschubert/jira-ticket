@@ -26,7 +26,7 @@ type Settings struct {
 	JiraBaseUrl           string    `json:"JIRA_BASE_URL"`
 	FeatureFolderPath     string    `json:"FEATURE_FOLDER,omitempty"`
 	Projects              []Project `json:"SHORTCUTS,omitempty"`
-	KnownIssueWorklfowUrl string    `json:"KNOWN_ISSUE_WORKFLOW_URL"`
+	KnownIssueWorkflowUrl string    `json:"KNOWN_ISSUE_WORKFLOW_URL"`
 }
 
 func getAbsolutePathToSettingsFile() string {

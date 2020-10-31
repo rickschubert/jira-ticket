@@ -27,7 +27,7 @@ What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.
 
 Required fields: `shortcut`, `id`, `defaultIssueType`
 
-Optional fields: `labels`, `assignee`
+Optional fields: `labels`, `assignee`, `transitions`
 
 ```json
 {
@@ -35,12 +35,16 @@ Optional fields: `labels`, `assignee`
     "id": "10001",
     "defaultIssueType": "98002",
     "labels": ["Frontend"],
-    "assignee": "5b9f82a2f226b393480f271a"
+    "assignee": "5b9f82a2f226b393480f271a",
+    "transitions": {
+        "inprogress": "21"
+    }
 }
 ```
 
 ## Flags
 - `--self-assign`, `--self` or `-s`: assigns the created Jira ticket to yourself
+- `--transition` or `-t`: If you have a `transitions` key specified in your settings, you can use this flag with a named argument to transition a ticket on creation. Using the example above, if we were to invoke the tool with `--transition inprogress`, then it would pass along the transition ID "21" when creating the ticket - which in case of our example Jira board would result in the ticket being transitioned to the "In Progress" column.
 - `--sdet-bot`: Create a tray known issue notification for that new Jira ticket
 
 # Development

@@ -41,6 +41,7 @@ type cliArgs struct {
 	parseFromClipboard             bool
 	createKnownSDETBugNotification bool
 	selfAssign                     bool
+	transitioningJiraId            string
 }
 
 func shouldUseClipboardContentAsDescription(args []string) bool {
@@ -56,6 +57,28 @@ func shouldUseClipboardContentAsDescription(args []string) bool {
 func shouldCreateKnownSDETBugNotification(args []string) bool {
 	_, found := utils.Find(args, "--sdet-bot")
 	return found
+}
+
+func getTransitionId(args []string, project constants.Project) string {
+	idxLong, foundLong := utils.Find(args, "--transition")
+	idxShort, foundShort := utils.Find(args, "-t")
+	var transitionId string
+	if foundLong || foundShort {
+		var transitionTitlePassedInCLIArguments string
+		if foundLong {
+			transitionTitlePassedInCLIArguments = args[idxLong+1]
+		} else {
+			transitionTitlePassedInCLIArguments = args[idxShort+1]
+		}
+
+		id, found := project.Transitions[transitionTitlePassedInCLIArguments]
+		if found {
+			transitionId = id
+		} else {
+			utils.ThrowCustomError(fmt.Sprintf("You specified in the command line arguments that you want to transition the ticket using the ID mapped to the key '%s' in your settings file for project '%s' - but such a transition title doesn't exist in your settings.", transitionTitlePassedInCLIArguments, project.Shortcut))
+		}
+	}
+	return transitionId
 }
 
 func getProject(desiredProject string) constants.Project {
@@ -127,6 +150,7 @@ func validateCommandLineArguments() cliArgs {
 	cliArgumentsPassed.parseFromClipboard = shouldUseClipboardContentAsDescription(args)
 	cliArgumentsPassed.createKnownSDETBugNotification = shouldCreateKnownSDETBugNotification(args)
 	cliArgumentsPassed.selfAssign = shouldSelfAssignTicket(args)
+	cliArgumentsPassed.transitioningJiraId = getTransitionId(args, cliArgumentsPassed.project)
 	return cliArgumentsPassed
 }
 
@@ -241,6 +265,9 @@ func main() {
 	newTicketInput := getNewTicketInput(cliArgsPassed, clipboardContent)
 	if cliArgsPassed.selfAssign {
 		newTicketInput.AssigneeUserId = constants.GetSettings().UserId
+	}
+	if cliArgsPassed.transitioningJiraId != "" {
+		newTicketInput.TransitionId = cliArgsPassed.transitioningJiraId
 	}
 	ticketInfo := jira.CreateNewTicket(newTicketInput)
 

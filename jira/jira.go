@@ -17,6 +17,7 @@ type CreateNewticketInput struct {
 	IssueType      string
 	Labels         []string
 	AssigneeUserId string
+	TransitionId   string
 }
 
 type update struct{}
@@ -73,9 +74,14 @@ type fields struct {
 	Labels      []string          `json:"labels,omitempty"`
 }
 
+type transition struct {
+	Id string `json:"id"`
+}
+
 type createNewTicketJiraAPIInput struct {
-	Update update `json:"update"`
-	Fields fields `json:"fields"`
+	Update     update      `json:"update"`
+	Fields     fields      `json:"fields"`
+	Transition *transition `json:"transition,omitempty"`
 }
 
 type NewTicket struct {
@@ -203,6 +209,9 @@ func CreateNewTicket(input CreateNewticketInput) NewTicket {
 	newTicketInput.Fields.Labels = input.Labels
 	if input.AssigneeUserId != "" {
 		newTicketInput.Fields.Assignee = &assignee{Id: input.AssigneeUserId}
+	}
+	if input.TransitionId != "" {
+		newTicketInput.Transition = &transition{Id: input.TransitionId}
 	}
 
 	inputJson, errMarshalling := json.MarshalIndent(newTicketInput, "", "    ")

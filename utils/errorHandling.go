@@ -16,3 +16,7 @@ func HandleErrorStrictlyWithMessage(err error, msg string) {
 		log.Fatal(fmt.Sprintf("%s\n\n%s", msg, err))
 	}
 }
+
+func ThrowCustomError(message string) {
+	log.Fatal(message)
+}

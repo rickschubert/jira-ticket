@@ -44,7 +44,7 @@ Optional fields: `labels`, `assignee`, `transitions`
 
 ## Flags
 - `--self-assign`, `--self` or `-s`: assigns the created Jira ticket to yourself
-- `--label` or `-l`: Add a label to your ticket. You can add multiple flags by passing the flag multiple times. Should your shortcut alraedy contain a labels field, the labels from the shortcut and from the flags will be merged together.
+- `--label` or `-l` followed by any string adds this as label to your ticket. You can add multiple flags by passing the flag multiple times. Should your shortcut already contain a labels field, the labels from the shortcut and from the flags will be merged together.
 - `--transition` or `-t`: If you have a `transitions` key specified in your settings, you can use this flag with a named argument to transition a ticket on creation. Using the example above, if we were to invoke the tool with `--transition inprogress`, then it would pass along the transition ID "21" when creating the ticket - which in case of our example Jira board would result in the ticket being transitioned to the "In Progress" column.
 - `--sdet-bot`: Create a tray known issue notification for that new Jira ticket
 

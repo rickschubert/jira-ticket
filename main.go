@@ -42,6 +42,7 @@ type cliArgs struct {
 	createKnownSDETBugNotification bool
 	selfAssign                     bool
 	transitioningJiraId            string
+	labels                         []string
 }
 
 func shouldUseClipboardContentAsDescription(args []string) bool {
@@ -95,6 +96,18 @@ func getProject(desiredProject string) constants.Project {
 	return projectToReturn
 }
 
+func getLabels(args []string, project constants.Project) []string {
+	var labelsPassedInCLIArguments []string
+	for idx, arg := range args {
+		// This works on the assumption that after `--label` or `-l`, a label
+		// is passed. If this is not the case, it will continue but with errors.
+		if arg == "--label" || arg == "-l" {
+			labelsPassedInCLIArguments = append(labelsPassedInCLIArguments, args[idx+1])
+		}
+	}
+	return append(project.Labels, labelsPassedInCLIArguments...)
+}
+
 func isArgumentANonPositionalOptionalArgument(arg string) bool {
 	if len(arg) == 2 {
 		firstCharacterOfArgument := arg[0:1]
@@ -145,6 +158,7 @@ func validateCommandLineArguments() cliArgs {
 	}
 
 	cliArgumentsPassed.project = getProject(args[0])
+	cliArgumentsPassed.labels = getLabels(args, cliArgumentsPassed.project)
 	cliArgumentsPassed.ticketTitle = getTicketTitle(args)
 	cliArgumentsPassed.ticketDescription = getTicketDescription(args)
 	cliArgumentsPassed.parseFromClipboard = shouldUseClipboardContentAsDescription(args)
@@ -243,7 +257,7 @@ func createKnownSdetBugNotification(bugInfo knownIssuesWorkflowInputSchema) {
 
 func getNewTicketInput(cliArgsPassed cliArgs, clipboardContent string) jira.CreateNewticketInput {
 	var newTicketInfo jira.CreateNewticketInput
-	newTicketInfo.Labels = cliArgsPassed.project.Labels
+	newTicketInfo.Labels = cliArgsPassed.labels
 	newTicketInfo.ProjectId = cliArgsPassed.project.Id
 	newTicketInfo.IssueType = cliArgsPassed.project.IssueType
 	newTicketInfo.AssigneeUserId = cliArgsPassed.project.Assignee

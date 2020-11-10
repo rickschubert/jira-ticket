@@ -19,6 +19,7 @@ type Project struct {
 	Assignee  string   `json:"assignee"`
 	// Object key: transitionTitle | Object value: Jira transition ID
 	Transitions map[string]string `json:"transitions"`
+	Priority    string            `json:"priority"`
 }
 
 type Settings struct {

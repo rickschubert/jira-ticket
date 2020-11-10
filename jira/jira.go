@@ -18,6 +18,7 @@ type CreateNewticketInput struct {
 	Labels         []string
 	AssigneeUserId string
 	TransitionId   string
+	PriorityId     string
 }
 
 type update struct{}
@@ -35,6 +36,10 @@ type reporter struct {
 }
 
 type assignee struct {
+	Id string `json:"id"`
+}
+
+type priority struct {
 	Id string `json:"id"`
 }
 
@@ -72,6 +77,7 @@ type fields struct {
 	Assignee    *assignee         `json:"assignee,omitempty"`
 	Description ticketDescription `json:"description"`
 	Labels      []string          `json:"labels,omitempty"`
+	Priority    *priority         `json:"priority,omitempty"`
 }
 
 type transition struct {
@@ -209,6 +215,9 @@ func CreateNewTicket(input CreateNewticketInput) NewTicket {
 	newTicketInput.Fields.Labels = input.Labels
 	if input.AssigneeUserId != "" {
 		newTicketInput.Fields.Assignee = &assignee{Id: input.AssigneeUserId}
+	}
+	if input.PriorityId != "" {
+		newTicketInput.Fields.Priority = &priority{Id: input.PriorityId}
 	}
 	if input.TransitionId != "" {
 		newTicketInput.Transition = &transition{Id: input.TransitionId}

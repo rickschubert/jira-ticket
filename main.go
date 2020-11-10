@@ -41,7 +41,8 @@ type cliArgs struct {
 	parseFromClipboard             bool
 	createKnownSDETBugNotification bool
 	selfAssign                     bool
-	transitioningJiraId            string
+	transitioningJiraID            string
+	priorityJiraID                 string
 	labels                         []string
 }
 
@@ -60,10 +61,10 @@ func shouldCreateKnownSDETBugNotification(args []string) bool {
 	return found
 }
 
-func getTransitionId(args []string, project constants.Project) string {
+func getTransitionID(args []string, project constants.Project) string {
 	idxLong, foundLong := utils.Find(args, "--transition")
 	idxShort, foundShort := utils.Find(args, "-t")
-	var transitionId string
+	var transitionID string
 	if foundLong || foundShort {
 		var transitionTitlePassedInCLIArguments string
 		if foundLong {
@@ -74,12 +75,12 @@ func getTransitionId(args []string, project constants.Project) string {
 
 		id, found := project.Transitions[transitionTitlePassedInCLIArguments]
 		if found {
-			transitionId = id
+			transitionID = id
 		} else {
 			utils.ThrowCustomError(fmt.Sprintf("You specified in the command line arguments that you want to transition the ticket using the ID mapped to the key '%s' in your settings file for project '%s' - but such a transition title doesn't exist in your settings.", transitionTitlePassedInCLIArguments, project.Shortcut))
 		}
 	}
-	return transitionId
+	return transitionID
 }
 
 func getProject(desiredProject string) constants.Project {
@@ -106,6 +107,39 @@ func getLabels(args []string, project constants.Project) []string {
 		}
 	}
 	return append(project.Labels, labelsPassedInCLIArguments...)
+}
+
+func mapPriorityWordToPriorityID(priorityPassed string) string {
+	prioritiesMap := make(map[string]string)
+	prioritiesMap["critical"] = "5"
+	prioritiesMap["high"] = "4"
+	prioritiesMap["medium"] = "3"
+	prioritiesMap["low"] = "2"
+	prioritiesMap["lowest"] = "1"
+	id, found := prioritiesMap[strings.ToLower(priorityPassed)]
+	if found {
+		return id
+	}
+	return ""
+}
+
+func getPriorityID(args []string, proj constants.Project) string {
+	var priorityID string
+	priorityID = mapPriorityWordToPriorityID(proj.Priority)
+	for idx, arg := range args {
+		// This works on the assumption that after `--priority` or `-p`, a priority ID
+		// is passed, i.e. 1 (Critical) or 5 (Lowest)
+		if arg == "--priority" || arg == "-p" {
+			nextArg := args[idx+1]
+			priorityIDDerivedFromWord := mapPriorityWordToPriorityID(nextArg)
+			if priorityIDDerivedFromWord != "" {
+				priorityID = priorityIDDerivedFromWord
+			} else {
+				priorityID = nextArg
+			}
+		}
+	}
+	return priorityID
 }
 
 func isArgumentANonPositionalOptionalArgument(arg string) bool {
@@ -164,7 +198,8 @@ func validateCommandLineArguments() cliArgs {
 	cliArgumentsPassed.parseFromClipboard = shouldUseClipboardContentAsDescription(args)
 	cliArgumentsPassed.createKnownSDETBugNotification = shouldCreateKnownSDETBugNotification(args)
 	cliArgumentsPassed.selfAssign = shouldSelfAssignTicket(args)
-	cliArgumentsPassed.transitioningJiraId = getTransitionId(args, cliArgumentsPassed.project)
+	cliArgumentsPassed.transitioningJiraID = getTransitionID(args, cliArgumentsPassed.project)
+	cliArgumentsPassed.priorityJiraID = getPriorityID(args, cliArgumentsPassed.project)
 	return cliArgumentsPassed
 }
 
@@ -215,7 +250,7 @@ func promptForCause() string {
 	return cause
 }
 
-func collectInformationToCreateKnownSdetBugNotification(ticketId string, title string, description string) knownIssuesWorkflowInputSchema {
+func collectInformationToCreateKnownSdetBugNotification(ticketID string, title string, description string) knownIssuesWorkflowInputSchema {
 	fullText := title + " " + description
 	mentionedFeature, err := cucumberfeatureparser.GetFeatureInfoOfTextMentioningFeature(fullText)
 	utils.HandleErrorStrictly(err)
@@ -229,7 +264,7 @@ func collectInformationToCreateKnownSdetBugNotification(ticketId string, title s
 	return knownIssuesWorkflowInputSchema{
 		Bucket:      mentionedFeature.Bucket,
 		Feature:     mentionedFeature.Name,
-		Jira:        ticketId,
+		Jira:        ticketID,
 		Step:        step,
 		Error:       errAppearingWithFeature,
 		Environment: environment,
@@ -239,12 +274,12 @@ func collectInformationToCreateKnownSdetBugNotification(ticketId string, title s
 
 func createKnownSdetBugNotification(bugInfo knownIssuesWorkflowInputSchema) {
 	settings := constants.GetSettings()
-	inputJson, errMarshalling := json.MarshalIndent(bugInfo, "", "    ")
+	inputJSON, errMarshalling := json.MarshalIndent(bugInfo, "", "    ")
 	utils.HandleErrorStrictly(errMarshalling)
 	resp, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
 		SetHeader("Accept", "application/json").
-		SetBody(string(inputJson)).
+		SetBody(string(inputJSON)).
 		Post(settings.KnownIssueWorkflowUrl)
 	utils.HandleErrorStrictly(err)
 
@@ -261,6 +296,7 @@ func getNewTicketInput(cliArgsPassed cliArgs, clipboardContent string) jira.Crea
 	newTicketInfo.ProjectId = cliArgsPassed.project.Id
 	newTicketInfo.IssueType = cliArgsPassed.project.IssueType
 	newTicketInfo.AssigneeUserId = cliArgsPassed.project.Assignee
+	newTicketInfo.PriorityId = cliArgsPassed.priorityJiraID
 
 	title, description := getTicketTitleAndDescription(cliArgsPassed, clipboardContent)
 	newTicketInfo.Title = title
@@ -280,8 +316,11 @@ func main() {
 	if cliArgsPassed.selfAssign {
 		newTicketInput.AssigneeUserId = constants.GetSettings().UserId
 	}
-	if cliArgsPassed.transitioningJiraId != "" {
-		newTicketInput.TransitionId = cliArgsPassed.transitioningJiraId
+	if cliArgsPassed.transitioningJiraID != "" {
+		newTicketInput.TransitionId = cliArgsPassed.transitioningJiraID
+	}
+	if cliArgsPassed.priorityJiraID != "" {
+		newTicketInput.PriorityId = cliArgsPassed.priorityJiraID
 	}
 	ticketInfo := jira.CreateNewTicket(newTicketInput)
 

@@ -23,11 +23,11 @@ Everything after first line becomes description of the ticket
 
 * Option B: Run `./jira-ticket [shortcut] "[title of your ticket]" "[description of your ticket]"` (Ticket description is optional)
 
-What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.jiraticketcreator` file. The example below means that `./jira-ticket green` would create an issue of type "98002" against the Jira board "10001". Additionally, the newly created ticket would carry the label "Frontend" and be automatically assigned to the person with user id "5b9f82a2f226b393480f271a". Since the configuration is just JSON, you can create shortcuts however you like! (For a list of tray specific configurations, please ping me privately.)
+What shortcuts you can use is determined by the `SHORTCUTS` section in your `~/.jiraticketcreator` file. The example below means that `./jira-ticket green` would create an issue of type "98002" against the Jira board "10001". Additionally, the newly created ticket would carry the label "Frontend", have a priority of ID "1" (Critical) and be automatically assigned to the person with user id "5b9f82a2f226b393480f271a". Since the configuration is just JSON, you can create shortcuts however you like! (For a list of tray specific configurations, please ping me privately.)
 
 Required fields: `shortcut`, `id`, `defaultIssueType`
 
-Optional fields: `labels`, `assignee`, `transitions`
+Optional fields: `labels`, `assignee`, `transitions`, `priority`
 
 ```json
 {
@@ -38,7 +38,8 @@ Optional fields: `labels`, `assignee`, `transitions`
     "assignee": "5b9f82a2f226b393480f271a",
     "transitions": {
         "inprogress": "21"
-    }
+    },
+    "priority": "1"
 }
 ```
 
@@ -46,6 +47,7 @@ Optional fields: `labels`, `assignee`, `transitions`
 - `--self-assign`, `--self` or `-s`: assigns the created Jira ticket to yourself
 - `--label` or `-l` followed by any string adds this as label to your ticket. You can add multiple flags by passing the flag multiple times. Should your shortcut already contain a labels field, the labels from the shortcut and from the flags will be merged together.
 - `--transition` or `-t`: If you have a `transitions` key specified in your settings, you can use this flag with a named argument to transition a ticket on creation. Using the example above, if we were to invoke the tool with `--transition inprogress`, then it would pass along the transition ID "21" when creating the ticket - which in case of our example Jira board would result in the ticket being transitioned to the "In Progress" column.
+- `priority` or `-p`: Pass along a priority ID to mark the ticket with a certain priority. If your shortcut also has a "priority" field, the priority passed in via the command line arguments will take precedence. We also accept words which we will map to the following IDs: "Critical" - "1"; "High" - "2"; "Medium" - "3"; Low - "4"; Lowest - "5".
 - `--sdet-bot`: Create a tray known issue notification for that new Jira ticket
 
 # Development

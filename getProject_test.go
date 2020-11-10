@@ -18,12 +18,15 @@ func TestGetProjectSuccess(t *testing.T) {
 }
 
 func TestGetProjectWithTransitionsSuccess(t *testing.T) {
-	expectedMap := make(map[string]string)
-	expectedMap["inprogress"] = "21"
+	expectedTransitions := make(map[string]string)
+	expectedTransitions["p"] = "21"
+	expectedTransitions["prog"] = "21"
+	expectedTransitions["progress"] = "21"
+	expectedTransitions["inprogress"] = "21"
 	assert.Equal(t, constants.Project{
 		Shortcut:    "qa",
 		Id:          "10064",
 		IssueType:   "10084",
-		Transitions: expectedMap,
+		Transitions: expectedTransitions,
 	}, getProject("qa"))
 }

@@ -111,11 +111,11 @@ func getLabels(args []string, project constants.Project) []string {
 
 func mapPriorityWordToPriorityID(priorityPassed string) string {
 	prioritiesMap := make(map[string]string)
-	prioritiesMap["critical"] = "5"
-	prioritiesMap["high"] = "4"
+	prioritiesMap["critical"] = "1"
+	prioritiesMap["high"] = "2"
 	prioritiesMap["medium"] = "3"
-	prioritiesMap["low"] = "2"
-	prioritiesMap["lowest"] = "1"
+	prioritiesMap["low"] = "4"
+	prioritiesMap["lowest"] = "5"
 	id, found := prioritiesMap[strings.ToLower(priorityPassed)]
 	if found {
 		return id

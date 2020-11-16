@@ -7,16 +7,16 @@
             "content": [
                 {
                     "type": "text",
-                    "text": "See failure on Jenkins "
+                    "text": "See failure on system "
                 },
                 {
                     "type": "text",
-                    "text": "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+                    "text": "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
                     "marks": [
                         {
                             "type": "link",
                             "attrs": {
-                                "href": "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/"
+                                "href": "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/"
                             }
                         }
                     ]

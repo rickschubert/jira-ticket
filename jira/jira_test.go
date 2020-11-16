@@ -13,7 +13,7 @@ func TestLinkifyJiraDescriptionObjects(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "See failure on Jenkins: https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
+					Text: "See failure on system: https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
 				},
 			},
 		},
@@ -24,16 +24,16 @@ func TestLinkifyJiraDescriptionObjects(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "See failure on Jenkins: ",
+					Text: "See failure on system: ",
 				},
 				{
 					Type: "text",
-					Text: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+					Text: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 					Marks: []mark{
 						{
 							Type: "link",
 							Attrs: Attr{
-								Href: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+								Href: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 							},
 						},
 					},
@@ -55,7 +55,7 @@ func TestLinkifyJiraDescriptionObjectsMultipleParagraphs(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "See failure on Jenkins: https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
+					Text: "See failure on system: https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
 				},
 			},
 		},
@@ -72,7 +72,7 @@ func TestLinkifyJiraDescriptionObjectsMultipleParagraphs(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "See failure on Jenkins: https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
+					Text: "See failure on system: https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go",
 				},
 			},
 		},
@@ -83,16 +83,16 @@ func TestLinkifyJiraDescriptionObjectsMultipleParagraphs(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "See failure on Jenkins: ",
+					Text: "See failure on system: ",
 				},
 				{
 					Type: "text",
-					Text: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+					Text: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 					Marks: []mark{
 						{
 							Type: "link",
 							Attrs: Attr{
-								Href: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+								Href: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 							},
 						},
 					},
@@ -116,16 +116,16 @@ func TestLinkifyJiraDescriptionObjectsMultipleParagraphs(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "See failure on Jenkins: ",
+					Text: "See failure on system: ",
 				},
 				{
 					Type: "text",
-					Text: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+					Text: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 					Marks: []mark{
 						{
 							Type: "link",
 							Attrs: Attr{
-								Href: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+								Href: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 							},
 						},
 					},
@@ -147,7 +147,7 @@ func TestLinkifyJiraDescriptionObjectsLinksAtBeginningAndEnd(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+					Text: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/ and there you go https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 				},
 			},
 		},
@@ -158,12 +158,12 @@ func TestLinkifyJiraDescriptionObjectsLinksAtBeginningAndEnd(t *testing.T) {
 			Content: []paragraphContent{
 				{
 					Type: "text",
-					Text: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+					Text: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 					Marks: []mark{
 						{
 							Type: "link",
 							Attrs: Attr{
-								Href: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+								Href: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 							},
 						},
 					},
@@ -174,12 +174,12 @@ func TestLinkifyJiraDescriptionObjectsLinksAtBeginningAndEnd(t *testing.T) {
 				},
 				{
 					Type: "text",
-					Text: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+					Text: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 					Marks: []mark{
 						{
 							Type: "link",
 							Attrs: Attr{
-								Href: "https://jenkins.tray.io/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
+								Href: "https://system.host.com/job/qa-api-utils-tests/6548/allure/#suites/7deabbaf120515942d030aa4a12b42ab/8caffa3c0bf480ed/",
 							},
 						},
 					},

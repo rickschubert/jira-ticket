@@ -48,9 +48,20 @@ type cliArgs struct {
 
 func shouldUseClipboardContentAsDescription(args []string) bool {
 	var positionalArguments []string
+	var isOptionToAFlag bool
 	for _, arg := range args {
+		if isOptionToAFlag {
+			continue
+		}
+		_, isAFlagThatRequiresOption := utils.Find(optionArgumentsThatShouldBeFollowedByAString, arg)
 		if !isArgumentANonPositionalOptionalArgument(arg) {
 			positionalArguments = append(positionalArguments, arg)
+		}
+		// No need to check here again if all flags come with option as we already do so earlier
+		if isAFlagThatRequiresOption {
+			isOptionToAFlag = true
+		} else {
+			isOptionToAFlag = false
 		}
 	}
 	return len(positionalArguments) < 2
@@ -183,13 +194,38 @@ func shouldSelfAssignTicket(args []string) bool {
 	return foundShortform || foundLong || foundShort
 }
 
+var optionArgumentsThatShouldBeFollowedByAString = []string{"--priority", "-p", "--transition", "-t", "--label", "-l"}
+
+func verifyThatRequiredArgumentsHaveBeenPassedWithOptions(args []string) {
+	for idx, arg := range args {
+		_, isAFlagThatRequiresOption := utils.Find(optionArgumentsThatShouldBeFollowedByAString, arg)
+		errorMsg := fmt.Sprintf("You passed the argument \"%s\" but didn't follow it with an option. Please provide a value along with it.", arg)
+		if isAFlagThatRequiresOption {
+			var nextArg string
+			if len(args) == idx+1 {
+				utils.ThrowCustomError(errorMsg)
+			} else {
+				nextArg = args[idx+1]
+			}
+			if isArgumentANonPositionalOptionalArgument(nextArg) {
+				utils.ThrowCustomError(errorMsg)
+			}
+		}
+	}
+}
+
+func verifyThatProjectNameHasBeenPassedInArguments(args []string) {
+	if len(args) < 1 {
+		utils.ThrowCustomError("You need to pass a valid shortcut that matches a key in your ~/.jiraticketcreator file. If you are unsure what that means, please refer to the readme.")
+	}
+}
+
 func validateCommandLineArguments() cliArgs {
 	var cliArgumentsPassed = cliArgs{}
 
 	args := os.Args[1:]
-	if len(args) < 1 {
-		panic("You need to pass the project where the project shoudd live under, i.e. BSP.")
-	}
+	verifyThatProjectNameHasBeenPassedInArguments(args)
+	verifyThatRequiredArgumentsHaveBeenPassedWithOptions(args)
 
 	cliArgumentsPassed.project = getProject(args[0])
 	cliArgumentsPassed.labels = getLabels(args, cliArgumentsPassed.project)

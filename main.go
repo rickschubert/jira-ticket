@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/Songmu/prompter"
@@ -29,9 +30,21 @@ type knownIssuesWorkflowInputSchema struct {
 }
 
 func openLinkInBrowser(link string) {
-	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open the new ticket for you in the browser. (Probably doesn't work on Windows.)", link))
-	cmd := exec.Command("open", link)
-	cmd.Run()
+	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open the new ticket for you in the browser.", link))
+	os := runtime.GOOS
+	switch os {
+	case "windows":
+		cmd := exec.Command("start", link)
+		cmd.Run()
+	case "darwin":
+		cmd := exec.Command("open", link)
+		cmd.Run()
+	case "linux":
+		cmd := exec.Command("xdg-open", link)
+		cmd.Run()
+	default:
+		fmt.Printf("Unable to open link for OS %s.\n", os)
+	}
 }
 
 type cliArgs struct {

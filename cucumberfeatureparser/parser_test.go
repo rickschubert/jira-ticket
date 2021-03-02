@@ -24,10 +24,10 @@ func TestGetFeatureInfoFromTextMentioningFeatureError(t *testing.T) {
 }
 
 func TestGetFeatureInfoFromTextMentioningFeatureSuccess(t *testing.T) {
-	feat, err := GetFeatureInfoOfTextMentioningFeature("this text does\n\ncontain a featureName organisationsViewer\n\ninbetween")
+	feat, err := GetFeatureInfoOfTextMentioningFeature("this text does\n\ncontain a featureName three\n\ninbetween")
 	assert.Equal(t, err, nil)
 	assert.Equal(t, feat, feature{
-		Name:   "organisationsViewer",
-		Bucket: "organisations",
+		Name:   "three",
+		Bucket: "bucket_two",
 	})
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/rickschubert/jira-ticket/utils"
@@ -52,9 +53,12 @@ func getMockSettings() Settings {
 	mockTransitions["prog"] = "21"
 	mockTransitions["progress"] = "21"
 	mockTransitions["inprogress"] = "21"
+	dir := os.Getenv("ROOT_DIRECTORY")
+	featureFixturesPath := path.Join(dir, "test_fixtures/features")
+
 	return Settings{
 		ApiKey:                "mockAPIKey",
-		FeatureFolderPath:     "~/Documents/features",
+		FeatureFolderPath:     featureFixturesPath,
 		KnownIssueWorkflowUrl: "https://mockUrl.com",
 		JiraBaseUrl:           "https://mycompany.atlassian.net",
 		UserId:                "1",

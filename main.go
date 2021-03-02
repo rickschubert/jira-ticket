@@ -40,10 +40,15 @@ func openLinkInBrowser(link string) {
 		cmd := exec.Command("open", link)
 		cmd.Run()
 	case "linux":
+		out, err := exec.Command("which xdg-open").Output()
+		_ = out
+		if err != nil {
+			color.Red(fmt.Sprintf("Unable to open link, please install xdg-open."))
+		}
 		cmd := exec.Command("xdg-open", link)
 		cmd.Run()
 	default:
-		fmt.Printf("Unable to open link for OS %s.\n", os)
+		color.Red(fmt.Sprintf("Unable to open link for unsupported OS '%s'.\n", os))
 	}
 }
 

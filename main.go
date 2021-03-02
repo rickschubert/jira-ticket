@@ -40,8 +40,7 @@ func openLinkInBrowser(link string) {
 		cmd := exec.Command("open", link)
 		cmd.Run()
 	case "linux":
-		out, err := exec.Command("which xdg-open").Output()
-		_ = out
+		_, err := exec.Command("which xdg-open").Output()
 		if err != nil {
 			color.Red(fmt.Sprintf("Unable to open link, please install xdg-open."))
 		}

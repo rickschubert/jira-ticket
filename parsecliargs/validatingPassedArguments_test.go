@@ -1,4 +1,4 @@
-package main
+package parsecliargs
 
 import (
 	"os"
@@ -27,205 +27,205 @@ func TestSuiteValidatingArguments(t *testing.T) {
 }
 
 func (suite *testSuite) TestArgsRegularInvokingAndAttachingClipboardContentToDescription() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             false,
-		ticketTitle:                    "this will be the title",
-		createKnownSDETBugNotification: false,
-		selfAssign:                     false,
+		ParseFromClipboard:             false,
+		TicketTitle:                    "this will be the title",
+		CreateKnownSDETBugNotification: false,
+		SelfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "this will be the title"}
 
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsRegularInvoking() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             false,
-		ticketTitle:                    "this will be the title",
-		createKnownSDETBugNotification: false,
-		selfAssign:                     false,
+		ParseFromClipboard:             false,
+		TicketTitle:                    "this will be the title",
+		CreateKnownSDETBugNotification: false,
+		SelfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "this will be the title"}
 
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldCreateKnownSDETNotification() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: true,
-		selfAssign:                     false,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: true,
+		SelfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssign() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: true,
-		selfAssign:                     true,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: true,
+		SelfAssign:                     true,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot", "--self"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssignLong() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: true,
-		selfAssign:                     true,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: true,
+		SelfAssign:                     true,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot", "--self-assign"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldCreateKnownSDETNotificationAndSelfAssignShort() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: true,
-		selfAssign:                     true,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: true,
+		SelfAssign:                     true,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot", "-s"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboard() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: false,
-		selfAssign:                     false,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: false,
+		SelfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboardAndCreateKnownSDETNotification() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: true,
-		selfAssign:                     false,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: true,
+		SelfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestArgsShouldParseFullTicketFromClipboardAndCreateKnownSDETNotificationReversed() {
-	expected := cliArgs{
-		project: constants.Project{
+	expected := CliArgs{
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		parseFromClipboard:             true,
-		ticketTitle:                    "",
-		createKnownSDETBugNotification: true,
-		selfAssign:                     false,
+		ParseFromClipboard:             true,
+		TicketTitle:                    "",
+		CreateKnownSDETBugNotification: true,
+		SelfAssign:                     false,
 	}
 	os.Args = []string{"jira-ticket", "embedded", "--sdet-bot"}
-	actual := validateCommandLineArguments()
+	actual := ValidateCommandLineArguments()
 	assert.Equal(suite.T(), expected, actual)
 }
 
 func (suite *testSuite) TestTicketTitleAndDescriptionRetrievalWithoutTakingClipboardContentIntoDescription() {
-	cliArgumentsRetrieved := cliArgs{
-		ticketTitle:        "This should be the ticket title!!!",
-		parseFromClipboard: false,
-		project: constants.Project{
+	cliArgumentsRetrieved := CliArgs{
+		TicketTitle:        "This should be the ticket title!!!",
+		ParseFromClipboard: false,
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		createKnownSDETBugNotification: false,
-		selfAssign:                     false,
+		CreateKnownSDETBugNotification: false,
+		SelfAssign:                     false,
 	}
 	clipboardContent := ""
-	title, description := getTicketTitleAndDescription(cliArgumentsRetrieved, clipboardContent)
+	title, description := GetTicketTitleAndDescription(cliArgumentsRetrieved, clipboardContent)
 	assert.Equal(suite.T(), "This should be the ticket title!!!", title)
 	assert.Equal(suite.T(), "", description)
 }
 
 func (suite *testSuite) TestParsingTicketTitleAndDescriptionFromClipboard() {
-	cliArgumentsRetrieved := cliArgs{
-		ticketTitle:        "",
-		parseFromClipboard: true,
-		project: constants.Project{
+	cliArgumentsRetrieved := CliArgs{
+		TicketTitle:        "",
+		ParseFromClipboard: true,
+		Project: constants.Project{
 			Shortcut:  "embedded",
 			Id:        "10059",
 			IssueType: "10004",
 			Labels:    []string(nil),
 		},
-		createKnownSDETBugNotification: false,
-		selfAssign:                     false,
+		CreateKnownSDETBugNotification: false,
+		SelfAssign:                     false,
 	}
 	clipboardContent := "This will be the title\n\nThis will be the description"
-	title, description := getTicketTitleAndDescription(cliArgumentsRetrieved, clipboardContent)
+	title, description := GetTicketTitleAndDescription(cliArgumentsRetrieved, clipboardContent)
 	assert.Equal(suite.T(), "This will be the title", title)
 	assert.Equal(suite.T(), "This will be the description", description)
 }

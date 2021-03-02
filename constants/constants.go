@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/rickschubert/jira-ticket/utils"
@@ -45,7 +46,46 @@ func readSettingsFileContent() []byte {
 	return settingsFile
 }
 
+func getMockSettings() Settings {
+	mockTransitions := make(map[string]string)
+	mockTransitions["p"] = "21"
+	mockTransitions["prog"] = "21"
+	mockTransitions["progress"] = "21"
+	mockTransitions["inprogress"] = "21"
+	return Settings{
+		ApiKey:                "mockAPIKey",
+		FeatureFolderPath:     "~/Documents/features",
+		KnownIssueWorkflowUrl: "https://mockUrl.com",
+		JiraBaseUrl:           "https://mycompany.atlassian.net",
+		UserId:                "1",
+		UserName:              "MyUserName",
+		Projects: []Project{
+			{
+				Assignee:  "5d19daa472f6850cd226fe1d",
+				Id:        "10131",
+				IssueType: "10004",
+				Labels:    []string{"Frontend"},
+				Shortcut:  "builderfe",
+			},
+			{
+				Id:          "10064",
+				IssueType:   "10084",
+				Transitions: mockTransitions,
+				Shortcut:    "qa",
+			},
+			{
+				Shortcut:  "embedded",
+				Id:        "10059",
+				IssueType: "10004",
+			},
+		},
+	}
+}
+
 func GetSettings() Settings {
+	if os.Getenv("UNIT_TESTS") == "true" {
+		return getMockSettings()
+	}
 	settingsFileContent := readSettingsFileContent()
 	var settings Settings
 	err := json.Unmarshal(settingsFileContent, &settings)

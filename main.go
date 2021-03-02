@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os/exec"
@@ -9,23 +8,11 @@ import (
 	"github.com/Songmu/prompter"
 	"github.com/atotto/clipboard"
 	"github.com/fatih/color"
-	"github.com/go-resty/resty/v2"
 	"github.com/rickschubert/jira-ticket/constants"
 	"github.com/rickschubert/jira-ticket/jira"
 	"github.com/rickschubert/jira-ticket/parsecliargs"
 	"github.com/rickschubert/jira-ticket/sdetbugnotification"
-	"github.com/rickschubert/jira-ticket/utils"
 )
-
-type knownIssuesWorkflowInputSchema struct {
-	Bucket      string `json:"bucket"`
-	Feature     string `json:"feature"`
-	Step        string `json:"step"`
-	Error       string `json:"error"`
-	Jira        string `json:"jira"`
-	Cause       string `json:"cause,omitempty"`
-	Environment string `json:"environment,omitempty"`
-}
 
 func openLinkInBrowser(link string) {
 	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open the new ticket for you in the browser. (Probably doesn't work on Windows.)", link))
@@ -40,32 +27,6 @@ func getClipboardContent() string {
 	} else {
 		return content
 	}
-}
-
-func promptForStep() string {
-	step := prompter.Prompt("Enter the step where the feature fails", "")
-	if step == "" {
-		log.Fatal("You need to enter a valid step")
-	}
-	return step
-}
-
-func promptForError() string {
-	err := prompter.Prompt("Enter the error which is shown as failure", "")
-	if err == "" {
-		log.Fatal("You need to enter a message for that error")
-	}
-	return err
-}
-
-func promptForEnvironment() string {
-	env := prompter.Prompt("Enter the environment where the feature fails (optional)", "")
-	return env
-}
-
-func promptForCause() string {
-	cause := prompter.Prompt("Enter the cause of the error (optional)", "")
-	return cause
 }
 
 func getNewTicketInput(cliArgsPassed parsecliargs.CliArgs, clipboardContent string) jira.CreateNewticketInput {
@@ -105,9 +66,7 @@ func main() {
 	openLinkInBrowser(ticketInfo.Link)
 
 	if cliArgsPassed.CreateKnownSDETBugNotification {
-		sdetbugnotification.CreateNotification(
-			ticketInfo.Key, newTicketInput.Title, newTicketInput.Description
-		)
+		sdetbugnotification.CreateNotification(ticketInfo.Key, newTicketInput.Title, newTicketInput.Description)
 	}
 }
 

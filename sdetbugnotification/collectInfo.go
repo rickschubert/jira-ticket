@@ -5,12 +5,49 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Songmu/prompter"
 	"github.com/fatih/color"
 	"github.com/go-resty/resty/v2"
 	"github.com/rickschubert/jira-ticket/constants"
 	"github.com/rickschubert/jira-ticket/cucumberfeatureparser"
 	"github.com/rickschubert/jira-ticket/utils"
 )
+
+type knownIssuesWorkflowInputSchema struct {
+	Bucket      string `json:"bucket"`
+	Feature     string `json:"feature"`
+	Step        string `json:"step"`
+	Error       string `json:"error"`
+	Jira        string `json:"jira"`
+	Cause       string `json:"cause,omitempty"`
+	Environment string `json:"environment,omitempty"`
+}
+
+func promptForStep() string {
+	step := prompter.Prompt("Enter the step where the feature fails", "")
+	if step == "" {
+		log.Fatal("You need to enter a valid step")
+	}
+	return step
+}
+
+func promptForError() string {
+	err := prompter.Prompt("Enter the error which is shown as failure", "")
+	if err == "" {
+		log.Fatal("You need to enter a message for that error")
+	}
+	return err
+}
+
+func promptForEnvironment() string {
+	env := prompter.Prompt("Enter the environment where the feature fails (optional)", "")
+	return env
+}
+
+func promptForCause() string {
+	cause := prompter.Prompt("Enter the cause of the error (optional)", "")
+	return cause
+}
 
 func collectInfo(ticketID string, title string, description string) knownIssuesWorkflowInputSchema {
 	fullText := title + " " + description
@@ -35,7 +72,7 @@ func collectInfo(ticketID string, title string, description string) knownIssuesW
 }
 
 func CreateNotification(ticketID string, title string, description string) {
-	bugInfo := collectInfo(ticketInfo.Key, newTicketInput.Title, newTicketInput.Description)
+	bugInfo := collectInfo(ticketID, title, description)
 	settings := constants.GetSettings()
 	inputJSON, errMarshalling := json.MarshalIndent(bugInfo, "", "    ")
 	utils.HandleErrorStrictly(errMarshalling)

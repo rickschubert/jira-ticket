@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"runtime"
 
 	"github.com/Songmu/prompter"
 	"github.com/atotto/clipboard"
@@ -15,9 +16,25 @@ import (
 )
 
 func openLinkInBrowser(link string) {
-	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open the new ticket for you in the browser. (Probably doesn't work on Windows.)", link))
-	cmd := exec.Command("open", link)
-	cmd.Run()
+	color.Green(fmt.Sprintf("Your new ticket has been successfully created! The link is %s \nWe will now try to open the new ticket for you in the browser.", link))
+	os := runtime.GOOS
+	switch os {
+	case "windows":
+		cmd := exec.Command("start", link)
+		cmd.Run()
+	case "darwin":
+		cmd := exec.Command("open", link)
+		cmd.Run()
+	case "linux":
+		_, err := exec.Command("which xdg-open").Output()
+		if err != nil {
+			color.Red(fmt.Sprintf("Unable to open link, please install xdg-open."))
+		}
+		cmd := exec.Command("xdg-open", link)
+		cmd.Run()
+	default:
+		color.Red(fmt.Sprintf("Unable to open link for unsupported OS '%s'.\n", os))
+	}
 }
 
 func getClipboardContent() string {
